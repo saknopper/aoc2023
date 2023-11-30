@@ -23,4 +23,4 @@ jobs:
         java-version: '21'
         cache: maven
     - name: Run
-      run: mvn -B compile exec:java
+      run: mvn -B -V compile exec:java
