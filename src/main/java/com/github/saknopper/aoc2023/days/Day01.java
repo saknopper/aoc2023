@@ -49,8 +49,7 @@ public class Day01 extends Day {
 
         for (int i = 0; i < result.length(); i++) {
             for (var entry : SPELLED_OUT_MAP.entrySet()) {
-                var end = Math.min(i + entry.getKey().length(), result.length());
-                if (entry.getKey().contentEquals(result.subSequence(i, end))) {
+                if (result.substring(i).startsWith(entry.getKey())) {
                     result.setCharAt(i, entry.getValue().charAt(0));
                 }
             }
