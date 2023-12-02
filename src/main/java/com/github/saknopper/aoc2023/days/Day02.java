@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class Day02 extends Day {
     @Override
@@ -28,33 +29,30 @@ public class Day02 extends Day {
 
     private static final Integer isGamePossible(String line, Map<String, Long> colorLimits) {
         var splitted = line.split(": ");
-        var gameInfo = splitted[0];
-        var cubeInfo = splitted[1];
-        var cubeSets = Arrays.asList(cubeInfo.split("; "));
+        var cubeSets = Arrays.asList(splitted[1].split("; "));
 
         if (colorLimits.entrySet().stream()
-                .anyMatch(limit -> cubeSets.stream().map(set -> maxCubesOfColor(set, limit.getKey()))
-                .max(Long::compareTo).orElseThrow() > limit.getValue()))
+                .anyMatch(limit -> maxCubesOfColor(cubeSets, limit.getKey()) > limit.getValue()))
             return 0;
 
-        return Integer.valueOf(gameInfo.split(" ")[1]);
+        return Integer.valueOf(splitted[0].split(" ")[1]);
     }
 
     private static final Long findMaxPowerInGame(String line) {
         var splitted = line.split(": ");
-        var cubeInfo = splitted[1];
-        var cubeSets = Arrays.asList(cubeInfo.split("; "));
+        var cubeSets = Arrays.asList(splitted[1].split("; "));
 
         return List.of("red", "green", "blue").stream()
-                .mapToLong(color -> cubeSets.stream().map(set -> maxCubesOfColor(set, color)).max(Long::compareTo).orElseThrow())
+                .mapToLong(color -> maxCubesOfColor(cubeSets, color))
                 .reduce(1, Math::multiplyExact);
     }
 
-    private static final Long maxCubesOfColor(String set, String color) {
-        return Arrays.asList(set.split(", ")).stream()
+    private static final Long maxCubesOfColor(List<String> sets, String color) {
+        return sets.stream()
+                .flatMap(set -> Stream.of(set.split(", ")))
                 .filter(c -> c.split(" ")[1].contentEquals(color))
                 .map(c -> c.split(" ")[0])
                 .mapToLong(Long::valueOf)
-                .reduce(1, Math::multiplyExact);
+                .max().orElse(0L);
     }
 }
