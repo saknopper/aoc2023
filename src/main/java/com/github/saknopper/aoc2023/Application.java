@@ -12,7 +12,7 @@ public class Application {
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
     private static final Set<String> SKIP_PART_ONE_DAYS = Set.of();
-    private static final Set<String> SKIP_PART_TWO_DAYS = Set.of();
+    private static final Set<String> SKIP_PART_TWO_DAYS = Set.of("05");
 
     public static void main(String[] args) {
         LOG.info("---------------------------------------------");

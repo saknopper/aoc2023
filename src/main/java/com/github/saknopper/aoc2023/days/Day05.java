@@ -63,7 +63,7 @@ public class Day05 extends Day {
         return String.valueOf(minLocation);
     }
 
-    private List<Mapping> getMappings(List<String> lines) {
+    private static List<Mapping> getMappings(List<String> lines) {
         var mappings = new ArrayList<Mapping>();
 
         List<Long> sources = List.of();
