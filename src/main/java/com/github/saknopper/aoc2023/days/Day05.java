@@ -24,7 +24,7 @@ public class Day05 extends Day {
         var seeds = NUMBER_PATTERN.matcher(lines.removeFirst()).results().map(MatchResult::group).map(Long::valueOf).toList();
         var mappings = getMappings(lines);
 
-        var minLocation = seeds.stream().parallel().map(nr -> {
+        var minLocation = seeds.stream().map(nr -> {
             long seedNr = nr;
             for (var m : mappings) {
                 seedNr = m.transform(seedNr);
@@ -52,7 +52,6 @@ public class Day05 extends Day {
         var mappings = getMappings(lines);
 
         var minLocation = ranges.stream().flatMapToLong(r -> LongStream.range(r.start, r.end)).parallel().map(nr -> {
-            //System.out.println("Handling: " + nr);
             long seedNr = nr;
             for (var m : mappings) {
                 seedNr = m.transform(seedNr);
@@ -68,34 +67,34 @@ public class Day05 extends Day {
 
         List<Long> sources = List.of();
         List<Long> destinations = List.of();
-        List<Long> ranges = List.of();
+        List<Long> sourceUpperLimits = List.of();
 
         lines.removeFirst();
         while (!lines.isEmpty()) {
             var line = lines.removeFirst();
             if (line.isBlank()) {
-                mappings.add(new Mapping(sources, destinations, ranges));
+                mappings.add(new Mapping(sources, destinations, sourceUpperLimits));
             } else if (line.endsWith("map:")) {
                 sources = new ArrayList<>();
                 destinations = new ArrayList<>();
-                ranges = new ArrayList<>();
+                sourceUpperLimits = new ArrayList<>();
             } else {
                 var nrs = NUMBER_PATTERN.matcher(line).results().map(MatchResult::group).map(Long::valueOf).toList();
                 destinations.add(nrs.get(0));
                 sources.add(nrs.get(1));
-                ranges.add(nrs.get(2));
+                sourceUpperLimits.add(Math.addExact(nrs.get(1), nrs.get(2)));
             }
         }
-        mappings.add(new Mapping(sources, destinations, ranges));
+        mappings.add(new Mapping(sources, destinations, sourceUpperLimits));
 
         return mappings;
     }
 
-    public record Mapping(List<Long> sources, List<Long> destinations, List<Long> ranges) {
+    public record Mapping(List<Long> sources, List<Long> destinations, List<Long> sourceUpperLimits) {
         public long transform(long input) {
             for (int i = 0; i < sources.size(); i++) {
-                if (input >= sources.get(i) && input <= (sources.get(i) + ranges.get(i))) {
-                    return Math.abs(destinations.get(i) - (sources.get(i)) + input);
+                if (input >= sources.get(i) && input <= sourceUpperLimits.get(i)) {
+                    return destinations.get(i) + input - sources.get(i);
                 }
             }
 
