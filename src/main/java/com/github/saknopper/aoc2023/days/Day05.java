@@ -93,7 +93,7 @@ public class Day05 extends Day {
     public record Mapping(List<Long> sources, List<Long> destinations, List<Long> sourceUpperLimits) {
         public long transform(long input) {
             for (int i = 0; i < sources.size(); i++) {
-                if (input >= sources.get(i) && input <= sourceUpperLimits.get(i)) {
+                if (input >= sources.get(i) && input < sourceUpperLimits.get(i)) {
                     return destinations.get(i) + input - sources.get(i);
                 }
             }
