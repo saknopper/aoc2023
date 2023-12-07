@@ -14,24 +14,22 @@ public class Day07 extends Day {
 
     @Override
     public String getAnswerPartOne() throws Exception {
-        List<HandAndBid> items = Files.lines(Paths.get(INPUT_RESOURCE.toURI())).map(l -> {
-                var splitted = l.split(" ");
-                return new HandAndBid(new Hand(splitted[0].trim(), determineHandType(splitted[0].trim(), false)),
-                        Long.valueOf(splitted[1].trim()), false);
-        }).sorted().toList();
-
-        return String.valueOf(IntStream.range(0, items.size()).mapToLong(i -> items.get(i).bid * (i + 1)).sum());
+        return String.valueOf(calcTotalWinnings(false));
     }
 
     @Override
     public String getAnswerPartTwo() throws Exception {
+        return String.valueOf(calcTotalWinnings(true));
+    }
+
+    private long calcTotalWinnings(boolean useJoker) throws Exception {
         List<HandAndBid> items = Files.lines(Paths.get(INPUT_RESOURCE.toURI())).map(l -> {
                 var splitted = l.split(" ");
-                return new HandAndBid(new Hand(splitted[0].trim(), determineHandType(splitted[0].trim(), true)),
-                        Long.valueOf(splitted[1].trim()), true);
+                return new HandAndBid(new Hand(splitted[0].trim(), determineHandType(splitted[0].trim(), useJoker)),
+                        Long.valueOf(splitted[1].trim()), useJoker);
         }).sorted().toList();
 
-        return String.valueOf(IntStream.range(0, items.size()).mapToLong(i -> items.get(i).bid * (i + 1)).sum());
+        return IntStream.range(0, items.size()).mapToLong(i -> items.get(i).bid * (i + 1)).sum();
     }
 
     private static HandType determineHandType(String cards, boolean useJoker) {
