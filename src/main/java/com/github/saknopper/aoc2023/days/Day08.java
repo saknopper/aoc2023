@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ public class Day08 extends Day {
 
     @Override
     public String getAnswerPartTwo() throws Exception {
-        var startPositions = nodeMap.keySet().stream().filter(n -> n.endsWith("A")).collect(Collectors.toCollection(ArrayList::new));
+        var startPositions = nodeMap.keySet().stream().filter(n -> n.endsWith("A")).toList();
         var individualSteps = startPositions.stream().map(this::stepsNecessaryToReachEnd).toList();
 
         return String.valueOf(MathUtils.lcm(individualSteps.stream().mapToInt(Integer::intValue).toArray()));
@@ -44,7 +43,7 @@ public class Day08 extends Day {
 
     private int stepsNecessaryToReachEnd(String position) {
         int steps = 0;
-        for (int i = 0; true; i = (i + 1) % instructions.length) {
+        for (int i = 0; ; i = (i + 1) % instructions.length) {
             if (position.endsWith("Z"))
                 break;
 
