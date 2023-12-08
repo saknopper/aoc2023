@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.github.saknopper.aoc2023.utils.MathUtils;
+import org.apache.commons.math3.util.ArithmeticUtils;
 
 public class Day08 extends Day {
     private static final URL INPUT_RESOURCE = Day08.class.getClassLoader().getResource("day08.txt");
@@ -38,7 +38,7 @@ public class Day08 extends Day {
         var startPositions = nodeMap.keySet().stream().filter(n -> n.endsWith("A")).toList();
         var individualSteps = startPositions.stream().map(this::stepsNecessaryToReachEnd).toList();
 
-        return String.valueOf(MathUtils.lcm(individualSteps.stream().mapToInt(Integer::intValue).toArray()));
+        return String.valueOf(individualSteps.stream().mapToLong(Integer::longValue).reduce(1L, ArithmeticUtils::lcm));
     }
 
     private int stepsNecessaryToReachEnd(String position) {
