@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import one.util.streamex.StreamEx;
@@ -26,15 +27,15 @@ public class Day09 extends Day {
 
     @Override
     public String getAnswerPartOne() throws Exception {
-        return String.valueOf(input.stream().mapToLong(list -> extrapolate(list, false)).sum());
+        return String.valueOf(input.stream().mapToLong(list -> extrapolate(list, false, Day09::forward)).sum());
     }
 
     @Override
     public String getAnswerPartTwo() throws Exception {
-        return String.valueOf(input.stream().mapToLong(list -> extrapolate(list, true)).sum());
+        return String.valueOf(input.stream().mapToLong(list -> extrapolate(list, true, Day09::backward)).sum());
     }
 
-    private static long extrapolate(List<Long> input, boolean backward) {
+    private static long extrapolate(List<Long> input, boolean backward, BiConsumer<List<List<Long>>, Integer> operation) {
         List<List<Long>> sequences = new ArrayList<>();
         sequences.add(new ArrayList<>(input));
 
@@ -42,16 +43,20 @@ public class Day09 extends Day {
             sequences.add(StreamEx.ofSubLists(sequences.getLast(), 2, 1).map(pair -> pair.getLast() - pair.getFirst()).toList());
 
         sequences.getLast().add(0L);
-        for (int i = sequences.size() - 2; i >= 0; i--) {
-            if (backward)
-                sequences.get(i).addFirst(sequences.get(i).getFirst() - sequences.get(i + 1).getFirst());
-            else
-                sequences.get(i).add(sequences.get(i).getLast() + sequences.get(i + 1).getLast());
-        }
+        for (int i = sequences.size() - 2; i >= 0; i--)
+            operation.accept(sequences, i);
 
         if (backward)
             return sequences.getFirst().getFirst();
 
         return sequences.getFirst().getLast();
+    }
+
+    private static void forward(List<List<Long>> sequences, int i) {
+        sequences.get(i).add(sequences.get(i).getLast() + sequences.get(i + 1).getLast());
+    }
+
+    private static void backward(List<List<Long>> sequences, int i) {
+        sequences.get(i).addFirst(sequences.get(i).getFirst() - sequences.get(i + 1).getFirst());
     }
 }
