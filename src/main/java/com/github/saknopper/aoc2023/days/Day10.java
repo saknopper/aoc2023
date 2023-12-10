@@ -113,33 +113,28 @@ public class Day10 extends Day {
     }
 
     private TileType determineStartPositionType() {
-        TileType north = null;
-        TileType south = null;
-        TileType east = null;
-        TileType west = null;
-
         boolean toNorth = false;
         boolean toSouth = false;
         boolean toEast = false;
         boolean toWest = false;
 
         try {
-            north = tiles.get(startPosition.i - 1).get(startPosition.j).type;
+            TileType north = tiles.get(startPosition.i - 1).get(startPosition.j).type;
             if (List.of(TileType.NS, TileType.SE, TileType.SW).contains(north))
                 toNorth = true;
         } catch (Exception e) { /* ignore */}
         try {
-            south = tiles.get(startPosition.i + 1).get(startPosition.j).type;
+            TileType south = tiles.get(startPosition.i + 1).get(startPosition.j).type;
             if (List.of(TileType.NS, TileType.NE, TileType.NW).contains(south))
                 toSouth = true;
         } catch (Exception e) { /* ignore */ }
         try {
-            east = tiles.get(startPosition.i).get(startPosition.j + 1).type;
+            TileType east = tiles.get(startPosition.i).get(startPosition.j + 1).type;
             if (List.of(TileType.EW, TileType.NW, TileType.SW).contains(east))
                 toEast = true;
         } catch (Exception e) { /* ignore */ }
         try { 
-            west = tiles.get(startPosition.i).get(startPosition.j - 1).type;
+            TileType west = tiles.get(startPosition.i).get(startPosition.j - 1).type;
             if (List.of(TileType.EW, TileType.NE, TileType.SE).contains(west))
                 toWest = true;
         } catch (Exception e) { /* ingore */ }
